@@ -1,40 +1,51 @@
 import * as vscode from 'vscode';
 
-class Person {
-  name: string;
-  children: Person[];
-  constructor(name: string, children: Person[] = []) {
-    this.name = name;
+class TreeItem extends vscode.TreeItem {
+  children?: { [key: string]: File };
+
+  constructor(
+    label: string,
+    collapsibleState: vscode.TreeItemCollapsibleState,
+    children?: { [key: string]: File }
+  ) {
+    super(label, collapsibleState);
     this.children = children;
   }
 }
 
-export const treeDataProvider = new (class
-  implements vscode.TreeDataProvider<Person>
-{
-  people = [
-    new Person('Tom', [
-      new Person('Tom1.1'),
-      new Person('Tom1.2', [new Person('Tom2.1')]),
-    ]),
-    new Person('Alex'),
-  ];
+export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
+  gists: Gist[];
 
-  getTreeItem(person: Person): vscode.TreeItem {
-    const collapsibleState: vscode.TreeItemCollapsibleState =
-      person.children.length === 0
-        ? vscode.TreeItemCollapsibleState.None
-        : vscode.TreeItemCollapsibleState.Collapsed;
-
-    return new vscode.TreeItem(person.name, collapsibleState);
+  /* Constructor takes an array of gists return from the GitHub Gist api endpoint */
+  constructor(gists: Gist[]) {
+    this.gists = gists;
   }
 
-  getChildren(person?: Person): vscode.ProviderResult<Person[]> {
-    if (person === undefined) {
-      return this.people;
+  /* Because custom TreeItem extends vscode.TreeItem, it can be returned without any modification */
+  getTreeItem(element: TreeItem): vscode.TreeItem {
+    return element;
+  }
+
+  /* Tree has the height of two level. getChildren is only invoked for the root */
+  getChildren(gist?: TreeItem): vscode.ProviderResult<TreeItem[]> {
+    /* When invoked on the root, return an array of gist, each of which is wrapped by TreeItem */
+    if (gist === undefined) {
+      return this.gists.map(
+        (gist: Gist) =>
+          new TreeItem(
+            gist.description,
+            vscode.TreeItemCollapsibleState.Collapsed,
+            gist.files
+          )
+      );
     }
-    return person.children;
+    /* When a gist doesn't have any file, return an empty array */
+    if (gist.children === undefined) {
+      return [];
+    }
+    /* Get files in a gist, wrap each of them by TreeItem, and return an array of these wrapped files */
+    return Object.values(gist.children).map(
+      file => new TreeItem(file.filename, vscode.TreeItemCollapsibleState.None)
+    );
   }
-})();
-
-// export default treeDataProvider;
+}
