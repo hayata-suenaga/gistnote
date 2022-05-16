@@ -21,7 +21,7 @@ export async function activate(context: vscode.ExtensionContext) {
   /* Register tree data provider for gists explorer */
   context.subscriptions.push(
     vscode.window.registerTreeDataProvider(
-      'gists',
+      'publicGists',
       new TreeDataProvider(gists as Gist[])
     )
   );

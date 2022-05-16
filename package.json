@@ -10,7 +10,7 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onView:publicGists"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -20,11 +20,22 @@
         "title": "Hello World"
       }
     ],
-    "views": {
-      "explorer": [
+    "viewsContainers": {
+      "activitybar": [
         {
-          "id": "gists",
-          "name": "Gists"
+          "id": "gists-browser",
+          "title": "Gists Browser",
+          "icon": "media/book.svg"
+        }
+      ]
+    },
+    "views": {
+      "gists-browser": [
+        {
+          "id": "publicGists",
+          "name": "Public Gists",
+          "icon": "media/book.svg",
+          "contextualTitle": "Gists Browser"
         }
       ]
     }
