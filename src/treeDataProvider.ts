@@ -1,5 +1,5 @@
-import { globalAgent } from 'https';
 import * as vscode from 'vscode';
+const axios = require('axios').default;
 
 class GistTreeItem extends vscode.TreeItem {
   gist: Gist;
@@ -17,7 +17,7 @@ class GistTreeItem extends vscode.TreeItem {
 class FileTreeItem extends vscode.TreeItem {
   constructor(file: File) {
     const command: vscode.Command = {
-      command: 'helloworld.helloWorld',
+      command: 'gistsBrowser.openGist',
       title: 'open',
       arguments: [file.raw_url],
     };
@@ -30,11 +30,14 @@ class FileTreeItem extends vscode.TreeItem {
 export class TreeDataProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
 {
-  gists: Gist[];
+  gists: Gist[] = [];
 
   /* Constructor takes an array of gists return from the GitHub Gist api endpoint */
-  constructor(gists: Gist[]) {
-    this.gists = gists;
+  constructor() {
+    (async () => {
+      this.gists = await getPublicGists();
+      this.refresh();
+    })();
   }
 
   /* Because custom TreeItem extends vscode.TreeItem, it can be returned without any modification */
@@ -54,6 +57,18 @@ export class TreeDataProvider
     /* When invoked on a GistTreeItem, return an array of FileTreeItems that represent files in the gist */
     return gistTreeItem.getFiles().map(file => new FileTreeItem(file));
   }
+
+  private _onDidChangeTreeData: vscode.EventEmitter<
+    vscode.TreeItem | undefined | null | void
+  > = new vscode.EventEmitter();
+  readonly onDidChangeTreeData: vscode.Event<
+    vscode.TreeItem | undefined | null | void
+  > = this._onDidChangeTreeData.event;
+
+  async refresh() {
+    this.gists = await getPublicGists();
+    this._onDidChangeTreeData.fire();
+  }
 }
 
 const getGistDescription = (gist: Gist): string => {
@@ -65,4 +80,12 @@ const getGistDescription = (gist: Gist): string => {
       : gist.description;
 
   return description;
+};
+
+const getPublicGists = async () => {
+  const { data: gists } = await axios.get(
+    'https://api.github.com/gists/public'
+  );
+
+  return gists;
 };

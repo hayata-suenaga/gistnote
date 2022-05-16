@@ -16,8 +16,13 @@
   "contributes": {
     "commands": [
       {
-        "command": "helloworld.helloWorld",
-        "title": "Hello World"
+        "command": "gistsBrowser.openGist",
+        "title": "Open Gist"
+      },
+      {
+        "command": "gistsBrowser.refreshPublicGists",
+        "title": "Refresh Public Gists",
+        "icon": "media/refresh.svg"
       }
     ],
     "viewsContainers": {
@@ -36,6 +41,15 @@
           "name": "Public Gists",
           "icon": "media/book.svg",
           "contextualTitle": "Gists Browser"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "gistsBrowser.refreshPublicGists",
+          "when": "view == publicGists",
+          "group": "navigation"
         }
       ]
     }

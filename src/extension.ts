@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-const axios = require('axios').default;
 import { TreeDataProvider } from './TreeDataProvider';
 import { TextDocumentContentProvider } from './DocumentContentProvider';
 
@@ -14,21 +13,15 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   );
 
-  const { data: gists } = await axios.get(
-    'https://api.github.com/gists/public'
-  );
-
   /* Register tree data provider for gists explorer */
+  const treeDataProvider = new TreeDataProvider();
   context.subscriptions.push(
-    vscode.window.registerTreeDataProvider(
-      'publicGists',
-      new TreeDataProvider(gists as Gist[])
-    )
+    vscode.window.registerTreeDataProvider('publicGists', treeDataProvider)
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'helloworld.helloWorld',
+      'gistsBrowser.openGist',
       async (fileURL: string) => {
         /* Get the uri of the document to be provided */
         const uri = vscode.Uri.parse(`gistSchema:${fileURL}`);
@@ -38,6 +31,12 @@ export async function activate(context: vscode.ExtensionContext) {
         await vscode.window.showTextDocument(doc, { preview: false });
       }
     )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('gistsBrowser.refreshPublicGists', () => {
+      treeDataProvider.refresh();
+    })
   );
 }
 
