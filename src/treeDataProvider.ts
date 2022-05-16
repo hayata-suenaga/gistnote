@@ -30,14 +30,21 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
   getChildren(gist?: TreeItem): vscode.ProviderResult<TreeItem[]> {
     /* When invoked on the root, return an array of gist, each of which is wrapped by TreeItem */
     if (gist === undefined) {
-      return this.gists.map(
-        (gist: Gist) =>
-          new TreeItem(
-            gist.description,
-            vscode.TreeItemCollapsibleState.Collapsed,
-            gist.files
-          )
-      );
+      return this.gists.map((gist: Gist) => {
+        console.log('file:', Object.values(gist.files)[0]);
+        const description =
+          !gist.description || !gist.description.trim()
+            ? Object.values(gist.files)[0]
+              ? Object.values(gist.files)[0].filename
+              : 'Gist with no title'
+            : gist.description;
+
+        return new TreeItem(
+          description,
+          vscode.TreeItemCollapsibleState.Collapsed,
+          gist.files
+        );
+      });
     }
     /* When a gist doesn't have any file, return an empty array */
     if (gist.children === undefined) {
