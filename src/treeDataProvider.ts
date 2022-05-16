@@ -1,19 +1,35 @@
+import { globalAgent } from 'https';
 import * as vscode from 'vscode';
 
-class TreeItem extends vscode.TreeItem {
-  children?: { [key: string]: File };
+class GistTreeItem extends vscode.TreeItem {
+  gist: Gist;
 
-  constructor(
-    label: string,
-    collapsibleState: vscode.TreeItemCollapsibleState,
-    children?: { [key: string]: File }
-  ) {
-    super(label, collapsibleState);
-    this.children = children;
+  constructor(gist: Gist) {
+    super(getGistDescription(gist), vscode.TreeItemCollapsibleState.Collapsed);
+    this.gist = gist;
+  }
+
+  getFiles() {
+    return Object.values(this.gist.files);
   }
 }
 
-export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
+class FileTreeItem extends vscode.TreeItem {
+  constructor(file: File) {
+    const command: vscode.Command = {
+      command: 'helloworld.helloWorld',
+      title: 'open',
+      arguments: [file.raw_url],
+    };
+
+    super(file.filename, vscode.TreeItemCollapsibleState.None);
+    this.command = command;
+  }
+}
+
+export class TreeDataProvider
+  implements vscode.TreeDataProvider<vscode.TreeItem>
+{
   gists: Gist[];
 
   /* Constructor takes an array of gists return from the GitHub Gist api endpoint */
@@ -22,37 +38,31 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
   }
 
   /* Because custom TreeItem extends vscode.TreeItem, it can be returned without any modification */
-  getTreeItem(element: TreeItem): vscode.TreeItem {
+  getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
     return element;
   }
 
   /* Tree has the height of two level. getChildren is only invoked for the root */
-  getChildren(gist?: TreeItem): vscode.ProviderResult<TreeItem[]> {
-    /* When invoked on the root, return an array of gist, each of which is wrapped by TreeItem */
-    if (gist === undefined) {
-      return this.gists.map((gist: Gist) => {
-        console.log('file:', Object.values(gist.files)[0]);
-        const description =
-          !gist.description || !gist.description.trim()
-            ? Object.values(gist.files)[0]
-              ? Object.values(gist.files)[0].filename
-              : 'Gist with no title'
-            : gist.description;
+  getChildren(
+    gistTreeItem?: GistTreeItem
+  ): vscode.ProviderResult<vscode.TreeItem[]> {
+    /* When invoked on the root, return an array of GistTreeItems */
+    if (gistTreeItem === undefined) {
+      return this.gists.map((gist: Gist) => new GistTreeItem(gist));
+    }
 
-        return new TreeItem(
-          description,
-          vscode.TreeItemCollapsibleState.Collapsed,
-          gist.files
-        );
-      });
-    }
-    /* When a gist doesn't have any file, return an empty array */
-    if (gist.children === undefined) {
-      return [];
-    }
-    /* Get files in a gist, wrap each of them by TreeItem, and return an array of these wrapped files */
-    return Object.values(gist.children).map(
-      file => new TreeItem(file.filename, vscode.TreeItemCollapsibleState.None)
-    );
+    /* When invoked on a GistTreeItem, return an array of FileTreeItems that represent files in the gist */
+    return gistTreeItem.getFiles().map(file => new FileTreeItem(file));
   }
 }
+
+const getGistDescription = (gist: Gist): string => {
+  const description =
+    !gist.description || !gist.description.trim()
+      ? Object.values(gist.files)[0]
+        ? Object.values(gist.files)[0].filename
+        : 'Gist with no title'
+      : gist.description;
+
+  return description;
+};

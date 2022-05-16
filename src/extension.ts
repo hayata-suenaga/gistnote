@@ -27,18 +27,17 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('helloworld.helloWorld', async () => {
-      /* Get the URL of the gist file to be fetched */
-      const content = await vscode.window.showInputBox({
-        placeHolder: 'File name',
-      });
-      /* Get the uri of the document to be provided */
-      const uri = vscode.Uri.parse(`gistSchema:${content}`);
-      /* Fetch the content and open the document */
-      const doc = await vscode.workspace.openTextDocument(uri);
-      /* Show the read only document */
-      await vscode.window.showTextDocument(doc, { preview: false });
-    })
+    vscode.commands.registerCommand(
+      'helloworld.helloWorld',
+      async (fileURL: string) => {
+        /* Get the uri of the document to be provided */
+        const uri = vscode.Uri.parse(`gistSchema:${fileURL}`);
+        /* Fetch the content and open the document */
+        const doc = await vscode.workspace.openTextDocument(uri);
+        /* Show the read only document */
+        await vscode.window.showTextDocument(doc, { preview: false });
+      }
+    )
   );
 }
 

@@ -9,7 +9,6 @@ export class TextDocumentContentProvider
   async provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
     /* Get the URL of the file to be fetched from the URI path */
     const fileURL = uri.path;
-    console.log('File URL:', fileURL);
     /* Fetch the file */
     const { data: content } = await axios.get(fileURL);
     /* Return the file content */
