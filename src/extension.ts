@@ -1,30 +1,21 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-const axios = require('axios').default;
+import { treeDataProvider } from './treeDataProvider';
+import { textDocumentContentProvider } from './textDocumentContentProvider';
 
 /* Extension is lazily activated open invocation of any of the commands */
 export async function activate(context: vscode.ExtensionContext) {
-  /* Create a content provider for "gists" schema */
-  const contentProvider = new (class
-    implements vscode.TextDocumentContentProvider
-  {
-    /* Implement the provider that returns a string to be rendered as a virtual document */
-    async provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
-      /* Get the URL of the file to be fetched from the URI path */
-      const fileURL = uri.path;
-      /* Fetch the file */
-      const { data: content } = await axios.get(fileURL);
-      /* Return the file content */
-      return content;
-    }
-  })();
-
   /* Register provider for the "gists" schema */
   context.subscriptions.push(
     vscode.workspace.registerTextDocumentContentProvider(
       'gists',
-      contentProvider
+      textDocumentContentProvider
     )
+  );
+
+  /* Register tree data provider for gists explorer */
+  context.subscriptions.push(
+    vscode.window.registerTreeDataProvider('gists', treeDataProvider)
   );
 
   context.subscriptions.push(
