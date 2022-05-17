@@ -1,3 +1,4 @@
+import { Credential } from './Credential';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { TreeDataProvider } from './TreeDataProvider';
@@ -5,6 +6,8 @@ import { TextDocumentContentProvider } from './DocumentContentProvider';
 
 /* Extension is lazily activated open invocation of any of the commands */
 export async function activate(context: vscode.ExtensionContext) {
+  const credential = new Credential(context);
+
   /* Register provider for the "gists" schema */
   context.subscriptions.push(
     vscode.workspace.registerTextDocumentContentProvider(
@@ -36,6 +39,15 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand('gistsBrowser.refreshPublicGists', () => {
       treeDataProvider.refresh();
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('gistsBrowser.test', async () => {
+      console.log('test command was invoked');
+      const githubClient = await credential.getGithubClient();
+      const userInfo = await githubClient.users.getAuthenticated();
+      vscode.window.showInformationMessage(userInfo.data.login);
     })
   );
 }
