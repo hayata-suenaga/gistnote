@@ -10,7 +10,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onView:publicGists"
+    "onView:gists"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -20,8 +20,8 @@
         "title": "Open Gist"
       },
       {
-        "command": "gistsBrowser.refreshPublicGists",
-        "title": "Refresh Public Gists",
+        "command": "gistsBrowser.refreshGists",
+        "title": "Refresh Gists",
         "icon": "media/refresh.svg"
       },
       {
@@ -42,8 +42,8 @@
     "views": {
       "gists-browser": [
         {
-          "id": "publicGists",
-          "name": "Public Gists",
+          "id": "gists",
+          "name": "Gists",
           "icon": "media/book.svg",
           "contextualTitle": "Gists Browser"
         }
@@ -52,8 +52,8 @@
     "menus": {
       "view/title": [
         {
-          "command": "gistsBrowser.refreshPublicGists",
-          "when": "view == publicGists",
+          "command": "gistsBrowser.refreshGists",
+          "when": "view == gists",
           "group": "navigation"
         }
       ]

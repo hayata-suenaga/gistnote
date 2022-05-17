@@ -7,6 +7,7 @@ import { TextDocumentContentProvider } from './DocumentContentProvider';
 /* Extension is lazily activated open invocation of any of the commands */
 export async function activate(context: vscode.ExtensionContext) {
   const credential = new Credential(context);
+  const githubClient = await credential.getGithubClient();
 
   /* Register provider for the "gists" schema */
   context.subscriptions.push(
@@ -17,9 +18,9 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   /* Register tree data provider for gists explorer */
-  const treeDataProvider = new TreeDataProvider();
+  const treeDataProvider = new TreeDataProvider(githubClient);
   context.subscriptions.push(
-    vscode.window.registerTreeDataProvider('publicGists', treeDataProvider)
+    vscode.window.registerTreeDataProvider('gists', treeDataProvider)
   );
 
   context.subscriptions.push(
@@ -36,18 +37,16 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   );
 
+  /* Command for fetching updated list of gists for the authenticated user */
   context.subscriptions.push(
-    vscode.commands.registerCommand('gistsBrowser.refreshPublicGists', () => {
+    vscode.commands.registerCommand('gistsBrowser.refreshGists', () => {
       treeDataProvider.refresh();
     })
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand('gistsBrowser.test', async () => {
-      console.log('test command was invoked');
-      const githubClient = await credential.getGithubClient();
-      const userInfo = await githubClient.users.getAuthenticated();
-      vscode.window.showInformationMessage(userInfo.data.login);
+      vscode.window.showInformationMessage('Test');
     })
   );
 }
