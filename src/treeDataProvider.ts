@@ -1,4 +1,3 @@
-import { Credential } from './Credential';
 import * as vscode from 'vscode';
 import { Octokit } from '@octokit/rest';
 

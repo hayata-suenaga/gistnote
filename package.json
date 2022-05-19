@@ -10,7 +10,9 @@
     "Other"
   ],
   "activationEvents": [
-    "onView:gists"
+    "onView:gists",
+    "onCommand:gistsBrowser.createPublicGist",
+    "onCommand:gistsBrowser.createSecreteGist"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -25,8 +27,13 @@
         "icon": "media/refresh.svg"
       },
       {
-        "command": "gistsBrowser.test",
-        "title": "Test",
+        "command": "gistsBrowser.createSecreteGist",
+        "title": "Create Secrete Gist",
+        "category": "Gists Browser"
+      },
+      {
+        "command": "gistsBrowser.createPublicGist",
+        "title": "Create Public Gist",
         "category": "Gists Browser"
       }
     ],
@@ -55,6 +62,14 @@
           "command": "gistsBrowser.refreshGists",
           "when": "view == gists",
           "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "gistsBrowser.createSecreteGist"
+        },
+        {
+          "command": "gistsBrowser.createPublicGist"
         }
       ]
     }

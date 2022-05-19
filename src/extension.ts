@@ -1,8 +1,11 @@
-import { Credential } from './Credential';
+import { Credential } from './credentials';
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { TreeDataProvider } from './TreeDataProvider';
-import { TextDocumentContentProvider } from './DocumentContentProvider';
+import { TreeDataProvider } from './treeDataProvider';
+import { TextDocumentContentProvider } from './documentContentProvider';
+import { Octokit } from '@octokit/rest';
+import { getFileName } from './utils';
+import { createNewGist } from './gistsCreator';
 
 /* Extension is lazily activated open invocation of any of the commands */
 export async function activate(context: vscode.ExtensionContext) {
@@ -45,9 +48,21 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('gistsBrowser.test', async () => {
-      vscode.window.showInformationMessage('Test');
-    })
+    vscode.commands.registerCommand(
+      'gistsBrowser.createPublicGist',
+      async (uri: vscode.Uri | undefined) => {
+        await createNewGist(githubClient, uri, true);
+      }
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'gistsBrowser.createSecreteGist',
+      async (uri: vscode.Uri | undefined) => {
+        await createNewGist(githubClient, uri, false);
+      }
+    )
   );
 }
 
