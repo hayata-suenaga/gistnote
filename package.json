@@ -24,7 +24,7 @@
       {
         "command": "gistsBrowser.refreshGists",
         "title": "Refresh Gists",
-        "icon": "media/refresh.svg"
+        "icon": "$(refresh)"
       },
       {
         "command": "gistsBrowser.createSecreteGist",
@@ -42,7 +42,7 @@
         {
           "id": "gists-browser",
           "title": "Gists Browser",
-          "icon": "media/book.svg"
+          "icon": "$(book)"
         }
       ]
     },
