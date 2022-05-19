@@ -51,7 +51,7 @@
         {
           "id": "gists",
           "name": "Gists",
-          "icon": "media/book.svg",
+          "icon": "$(book)",
           "contextualTitle": "Gists Browser"
         }
       ]
