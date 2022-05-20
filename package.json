@@ -1,6 +1,7 @@
 {
-  "name": "helloworld",
-  "displayName": "HelloWorld",
+  "name": "gistnote",
+  "displayName": "GistNote",
+  "publisher": "HayataSuenaga",
   "description": "",
   "version": "0.0.1",
   "engines": {
