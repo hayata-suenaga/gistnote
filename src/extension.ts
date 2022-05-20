@@ -4,7 +4,7 @@ import { TreeDataProvider } from './treeDataProvider';
 import { TextDocumentContentProvider } from './documentContentProvider';
 import { createNewGist } from './gistsCreator';
 
-/* Extension is activated open invocation of any of the commands or display of gists browser */
+/* Extension is activated open invocation of any of the commands or display of gists tree view */
 export async function activate(context: vscode.ExtensionContext) {
   const credential = new Credential(context);
   const githubClient = await credential.getGithubClient();
@@ -26,7 +26,7 @@ export async function activate(context: vscode.ExtensionContext) {
   /* Open a specified gist file as a virtual document in the editor */
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'gistsBrowser.openGist',
+      'gistNote.openGist',
       async (fileURL: string) => {
         /* Get the uri of the document to be displayed */
         const uri = vscode.Uri.parse(`gistSchema:${fileURL}`);
@@ -40,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   /* Fetch updated list of gists for the authenticated user */
   context.subscriptions.push(
-    vscode.commands.registerCommand('gistsBrowser.refreshGists', () => {
+    vscode.commands.registerCommand('gistNote.refreshGists', () => {
       treeDataProvider.refresh();
     })
   );
@@ -48,7 +48,7 @@ export async function activate(context: vscode.ExtensionContext) {
   /* Create a new public gist that holds a file with the selected text as its content */
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'gistsBrowser.createPublicGist',
+      'gistNote.createPublicGist',
       async (uri: vscode.Uri | undefined) => {
         await createNewGist(githubClient, uri, true);
         treeDataProvider.refresh();
@@ -59,7 +59,7 @@ export async function activate(context: vscode.ExtensionContext) {
   /* Create a new secrete gist that holds a file with the selected text as its content */
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'gistsBrowser.createSecreteGist',
+      'gistNote.createSecreteGist',
       async (uri: vscode.Uri | undefined) => {
         await createNewGist(githubClient, uri, false);
         treeDataProvider.refresh();

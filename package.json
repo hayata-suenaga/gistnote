@@ -11,65 +11,65 @@
   ],
   "activationEvents": [
     "onView:gists",
-    "onCommand:gistsBrowser.createPublicGist",
-    "onCommand:gistsBrowser.createSecreteGist"
+    "onCommand:gistNote.createPublicGist",
+    "onCommand:gistNote.createSecreteGist"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "gistsBrowser.openGist",
+        "command": "gistNote.openGist",
         "title": "Open Gist"
       },
       {
-        "command": "gistsBrowser.refreshGists",
+        "command": "gistNote.refreshGists",
         "title": "Refresh Gists",
         "icon": "$(refresh)"
       },
       {
-        "command": "gistsBrowser.createSecreteGist",
+        "command": "gistNote.createSecreteGist",
         "title": "Create Secrete Gist",
-        "category": "Gists Browser"
+        "category": "GistNote"
       },
       {
-        "command": "gistsBrowser.createPublicGist",
+        "command": "gistNote.createPublicGist",
         "title": "Create Public Gist",
-        "category": "Gists Browser"
+        "category": "GistNote"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "gists-browser",
-          "title": "Gists Browser",
+          "id": "gist-note",
+          "title": "GistNote",
           "icon": "$(book)"
         }
       ]
     },
     "views": {
-      "gists-browser": [
+      "gist-note": [
         {
           "id": "gists",
           "name": "Gists",
           "icon": "$(book)",
-          "contextualTitle": "Gists Browser"
+          "contextualTitle": "GistNote"
         }
       ]
     },
     "menus": {
       "view/title": [
         {
-          "command": "gistsBrowser.refreshGists",
+          "command": "gistNote.refreshGists",
           "when": "view == gists",
           "group": "navigation"
         }
       ],
       "editor/context": [
         {
-          "command": "gistsBrowser.createSecreteGist"
+          "command": "gistNote.createSecreteGist"
         },
         {
-          "command": "gistsBrowser.createPublicGist"
+          "command": "gistNote.createPublicGist"
         }
       ]
     }

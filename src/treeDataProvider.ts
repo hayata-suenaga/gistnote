@@ -19,7 +19,7 @@ class FileTreeItem extends vscode.TreeItem {
     super(file.filename, vscode.TreeItemCollapsibleState.None);
 
     const command: vscode.Command = {
-      command: 'gistsBrowser.openGist',
+      command: 'gistNote.openGist',
       title: 'open',
       arguments: [file.raw_url],
     };
