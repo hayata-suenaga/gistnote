@@ -51,3 +51,7 @@ Users appreciate release notes as you update your extension.
 ### 1.0.0
 
 Initial release of GistNote
+
+### 1.0.1
+
+Fix a bug with authentication
