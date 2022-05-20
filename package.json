@@ -24,12 +24,14 @@
     "commands": [
       {
         "command": "gistNote.openGist",
-        "title": "Open Gist"
+        "title": "Open Gist",
+        "category": "GistNote"
       },
       {
         "command": "gistNote.refreshGists",
         "title": "Refresh Gists",
-        "icon": "$(refresh)"
+        "icon": "$(refresh)",
+        "category": "GistNote"
       },
       {
         "command": "gistNote.createSecreteGist",
