@@ -1,9 +1,7 @@
 # Change Log
 
-All notable changes to the "helloworld" extension will be documented in this file.
+All notable changes to this extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
+## [1.0.0] - 2022-5-20
 
 - Initial release
