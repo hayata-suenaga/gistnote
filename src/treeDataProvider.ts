@@ -16,14 +16,16 @@ class GistTreeItem extends vscode.TreeItem {
 
 class FileTreeItem extends vscode.TreeItem {
   constructor(file: File) {
+    super(file.filename, vscode.TreeItemCollapsibleState.None);
+
     const command: vscode.Command = {
       command: 'gistsBrowser.openGist',
       title: 'open',
       arguments: [file.raw_url],
     };
-
-    super(file.filename, vscode.TreeItemCollapsibleState.None);
     this.command = command;
+
+    this.iconPath = vscode.ThemeIcon.File;
   }
 }
 
@@ -43,7 +45,7 @@ export class TreeDataProvider
     return element;
   }
 
-  /* Tree has the height of two level. getChildren is only invoked for the root */
+  /* Tree has the height of two level. getChildren is invoked for root and each gist */
   async getChildren(gistTreeItem?: GistTreeItem) {
     /* When invoked on the root, return an array of GistTreeItems */
     if (gistTreeItem === undefined) {
