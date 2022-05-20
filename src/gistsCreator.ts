@@ -18,8 +18,6 @@ export const createNewGist = async (
 
   const content = editor.document.getText(editor.selection);
 
-  console.log('content:', content);
-
   if (!content) {
     vscode.window.showErrorMessage('Please select a text');
     return;
