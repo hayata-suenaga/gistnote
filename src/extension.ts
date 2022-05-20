@@ -1,13 +1,13 @@
-import { Credential } from './credentials';
 import * as vscode from 'vscode';
+import { Credential } from './credentials';
 import { TreeDataProvider } from './treeDataProvider';
 import { TextDocumentContentProvider } from './documentContentProvider';
 import { createNewGist } from './gistsCreator';
 
 /* Extension is activated open invocation of any of the commands or display of gists tree view */
 export async function activate(context: vscode.ExtensionContext) {
-  const credential = new Credential(context);
-  const githubClient = await credential.getGithubClient();
+  const credential = new Credential();
+  await credential.init(context);
 
   /* Register document content provider for the "gists" schema */
   context.subscriptions.push(
@@ -18,7 +18,7 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   /* Register tree data provider for gists explorer */
-  const treeDataProvider = new TreeDataProvider(githubClient);
+  const treeDataProvider = new TreeDataProvider(credential);
   context.subscriptions.push(
     vscode.window.registerTreeDataProvider('gists', treeDataProvider)
   );
@@ -50,6 +50,10 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       'gistNote.createPublicGist',
       async (uri: vscode.Uri | undefined) => {
+        let githubClient = await credential.getGithubClient();
+        if (githubClient === null) {
+          return;
+        }
         await createNewGist(githubClient, uri, true);
         treeDataProvider.refresh();
       }
@@ -61,6 +65,10 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       'gistNote.createSecreteGist',
       async (uri: vscode.Uri | undefined) => {
+        const githubClient = await credential.getGithubClient();
+        if (githubClient === null) {
+          return;
+        }
         await createNewGist(githubClient, uri, false);
         treeDataProvider.refresh();
       }

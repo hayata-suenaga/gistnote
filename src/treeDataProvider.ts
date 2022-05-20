@@ -1,5 +1,5 @@
+import { Credential } from './credentials';
 import * as vscode from 'vscode';
-import { Octokit } from '@octokit/rest';
 
 class GistTreeItem extends vscode.TreeItem {
   gist: Gist;
@@ -32,12 +32,12 @@ class FileTreeItem extends vscode.TreeItem {
 export class TreeDataProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
 {
-  githubClient: Octokit;
+  credential: Credential;
   gists: Gist[] = [];
 
   /* Constructor takes an array of gists return from the GitHub Gist api endpoint */
-  constructor(githubClient: Octokit) {
-    this.githubClient = githubClient;
+  constructor(credential: Credential) {
+    this.credential = credential;
   }
 
   /* Because custom TreeItem extends vscode.TreeItem, it can be returned without any modification */
@@ -49,7 +49,12 @@ export class TreeDataProvider
   async getChildren(gistTreeItem?: GistTreeItem) {
     /* When invoked on the root, return an array of GistTreeItems */
     if (gistTreeItem === undefined) {
-      const { data: gists } = await this.githubClient.gists.list();
+      const githubClient = await this.credential.getGithubClient();
+      if (githubClient === null) {
+        return [];
+      }
+
+      const { data: gists } = await githubClient.gists.list();
       return (gists as Gist[]).map(gist => new GistTreeItem(gist));
     }
 

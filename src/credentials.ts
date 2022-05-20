@@ -6,11 +6,9 @@ const GITHUB_PROVIDER_ID = 'github';
 export class Credential {
   private githubClient: Octokit.Octokit | undefined;
 
-  constructor(context: vscode.ExtensionContext) {
-    (async () => {
-      this.registerSessionListener(context);
-      await this.initializeGitHubClient();
-    })();
+  async init(context: vscode.ExtensionContext) {
+    this.registerSessionListener(context);
+    await this.initializeGitHubClient();
   }
 
   async initializeGitHubClient() {
@@ -41,20 +39,32 @@ export class Credential {
     );
   }
 
-  async getGithubClient(): Promise<Octokit.Octokit> {
+  async getGithubClient(): Promise<Octokit.Octokit | null> {
     /* If the client is already available, return it */
     if (this.githubClient) {
       return this.githubClient;
     }
 
     /* If the client is not available, make the user login and get a session */
-    const session = await vscode.authentication.getSession(
-      GITHUB_PROVIDER_ID,
-      ['gist'],
-      {
-        createIfNone: true,
-      }
-    );
+    let session: vscode.AuthenticationSession | null = null;
+
+    try {
+      session = await vscode.authentication.getSession(
+        GITHUB_PROVIDER_ID,
+        ['gist'],
+        {
+          createIfNone: true,
+        }
+      );
+    } catch {
+      vscode.window.showErrorMessage(
+        'Please login to your GitHub account to use this functionality'
+      );
+    }
+
+    if (session === null) {
+      return null;
+    }
 
     /* Using the created session, initialize a github client */
     this.githubClient = new Octokit.Octokit({ auth: session.accessToken });
