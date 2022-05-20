@@ -1,35 +1,48 @@
-# helloworld README
+# GistNote README
 
-This is the README for your extension "helloworld". After writing up a brief description, we recommend including the following sections.
+GistNote allows you to browse your GitHub gists and create new ones.
+
+## Getting Started
+
+1. Install GistNote from VSCode Marketplace
+2. Click `GistNote` icon on Activity Bar
+3. If prompted, login to your GitHub account
+4. When authenticated, your gists appear on Side Bar
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### Browse Existing Gists
 
-For example if there is an image subfolder under your extension project workspace:
+![browse existing gists](images/gists-browser.gif)
 
-\!\[feature X\]\(images/feature-x.png\)
+You can browse and open both your public and secrete gists. You can do so in either of the following two ways.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- Click `GistNote` icon on Activity Bar
+- Execute `GistNote: browse gists` from Command Palette
 
-## Requirements
+Either of the above two operations brings up your gists on Side Bar. To inspect the content of a gist file, click the name of the file on Side Bar. This shows the file as a virtual document in Editor. Virtual documents are read-only. You CANNOT edit them.
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+### Create New Gists
 
-## Extension Settings
+![Create New Gists](images/create-new-gist.gif)
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Do you have a code snippet you want to save as a gist file? You can create both public and secrete gists right from VSCode Editor.
 
-For example:
+1. Open a document on Editor and select a text (code snippet) you want to save as a gist file.
+2. Do either of the following
 
-This extension contributes the following settings:
+- Right click anywhere on Editor and bring up a context menu. Select `Create a public gist` or `Create secrete gist`.
+- Execute `GistNote: Create a pubic gist` or `GistNote: Create a secrete gist` from Command Pallet
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+3. In Input Box that pops up, optionally give a description to the gist to create.
+4. Give a name to the gist file to create.
+5. If the gist is successfully created, you see a message appears confirming the creation of the gist.
 
-## Known Issues
+### Please give me feedbacks!
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+This is my personal project. If you want to additional functionalities, please let me know!
+
+---
 
 ## Release Notes
 
@@ -37,34 +50,4 @@ Users appreciate release notes as you update your extension.
 
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Initial release of GistNote
